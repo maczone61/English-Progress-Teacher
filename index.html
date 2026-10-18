@@ -608,11 +608,13 @@ async function answerQuestion() {
   $("answerArea").scrollIntoView({behavior:"smooth",block:"nearest"});
 }
 
+
 async function renderExercise() {
   const prompt = $("exercisePrompt");
   const optionsBox = $("exerciseOptions");
   const nextButton = $("newExercise");
   const checkButton = $("checkAnswer");
+  const feedback = $("exerciseFeedback");
 
   stopSpeech();
   currentExercise = null;
@@ -620,7 +622,7 @@ async function renderExercise() {
 
   prompt.textContent = "Your AI teacher is preparing a new question…";
   optionsBox.innerHTML = "";
-  $("exerciseFeedback").textContent = "";
+  feedback.textContent = "";
   checkButton.disabled = true;
   nextButton.disabled = true;
 
@@ -630,30 +632,59 @@ async function renderExercise() {
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        cache: "no-store",
         body: JSON.stringify({
           topic: lessonTopic,
           level: lessonLevel,
-          previous_questions: recentExerciseQuestions.slice(-20)
+          recent_questions: recentExerciseQuestions.slice(-20)
         })
       }
     );
 
-    const data = await response.json();
+    const responseText = await response.text();
+    let data;
 
-    if (!response.ok) {
-      throw new Error(data.detail || data.error || "Could not generate a question.");
+    try {
+      data = JSON.parse(responseText);
+    } catch (_) {
+      throw new Error(
+        "The AI service returned an invalid response. Please try again."
+      );
     }
 
-    if (
-      !data.exercise ||
-      !data.exercise.question ||
-      !Array.isArray(data.exercise.options) ||
-      data.exercise.options.length !== 4
-    ) {
-      throw new Error("The AI returned an invalid question.");
+    if (!response.ok) {
+      throw new Error(
+        data.detail ||
+        data.error ||
+        "Question generation failed (HTTP " + response.status + ")."
+      );
     }
 
     const e = data.exercise;
+
+    if (
+      !e ||
+      typeof e.question !== "string" ||
+      !e.question.trim() ||
+      !Array.isArray(e.options) ||
+      e.options.length !== 4 ||
+      !e.options.every(
+        option => typeof option === "string" && option.trim()
+      ) ||
+      new Set(e.options.map(
+        option => option.trim().toLowerCase()
+      )).size !== 4 ||
+      !Number.isInteger(e.correctIndex) ||
+      e.correctIndex < 0 ||
+      e.correctIndex > 3 ||
+      typeof e.explanation !== "string" ||
+      !e.explanation.trim()
+    ) {
+      throw new Error(
+        "The AI returned an incomplete or invalid question. Try again."
+      );
+    }
+
     currentExercise = e;
 
     recentExerciseQuestions.push(e.question);
@@ -663,63 +694,74 @@ async function renderExercise() {
 
     exerciseIndex++;
     prompt.textContent = `Question ${exerciseIndex}: ${e.question}`;
-    $("exerciseFeedback").style.color = "#f3f5ff";
+    feedback.style.color = "#f3f5ff";
 
     e.options.forEach((option, i) => {
       const button = document.createElement("button");
+      button.type = "button";
       button.className = "secondary answer-option";
-      button.textContent = String.fromCharCode(65 + i) + ". " + option;
+      button.textContent =
+        String.fromCharCode(65 + i) + ". " + option;
 
       button.addEventListener("click", () => {
         chosenAnswer = i;
 
-        [...optionsBox.children].forEach(
-          item => item.style.borderColor = "#414c67"
-        );
+        [...optionsBox.children].forEach(item => {
+          item.style.borderColor = "#414c67";
+        });
 
         button.style.borderColor = "#9aafff";
-        $("exerciseFeedback").textContent = "Answer selected. Tap Check answer.";
+        feedback.style.color = "#f3f5ff";
+        feedback.textContent = "Answer selected. Tap Check answer.";
       });
 
       optionsBox.appendChild(button);
     });
 
     checkButton.disabled = false;
-    $("exerciseFeedback").textContent =
-      "Choose an answer, then tap Check answer.";
+    feedback.textContent = "Choose an answer, then tap Check answer.";
 
   } catch (error) {
     prompt.textContent = "We couldn't generate a new question.";
-    $("exerciseFeedback").textContent =
-      error.message + " Tap Next question to try again.";
-    $("exerciseFeedback").style.color = "#ffb7bd";
+    feedback.style.color = "#ffb7bd";
+    feedback.textContent =
+      (error.message || "An unexpected error occurred.") +
+      " Tap Next question to try again.";
 
   } finally {
     nextButton.disabled = false;
   }
-
-  checkButton.onclick = () => {
-    if (!currentExercise) {
-      $("exerciseFeedback").textContent =
-        "Please generate a question first.";
-      return;
-    }
-
-    if (chosenAnswer === null) {
-      $("exerciseFeedback").textContent =
-        "Please select an answer first.";
-      return;
-    }
-
-    const correct = chosenAnswer === currentExercise.correctIndex;
-    $("exerciseFeedback").style.color =
-      correct ? "#69e0bd" : "#ffb7bd";
-
-    $("exerciseFeedback").textContent = correct
-      ? "Correct! " + currentExercise.explanation
-      : "Not quite. " + currentExercise.explanation;
-  };
 }
+
+$("newExercise").addEventListener("click", () => {
+  renderExercise();
+});
+
+$("checkAnswer").addEventListener("click", () => {
+  const feedback = $("exerciseFeedback");
+
+  if (!currentExercise) {
+    feedback.textContent = "Please generate a question first.";
+    return;
+  }
+
+  if (chosenAnswer === null) {
+    feedback.textContent = "Please select an answer first.";
+    return;
+  }
+
+  const correct =
+    chosenAnswer === currentExercise.correctIndex;
+
+  feedback.style.color = correct ? "#69e0bd" : "#ffb7bd";
+  feedback.textContent = correct
+    ? "Correct! " + currentExercise.explanation
+    : "Not quite. " + currentExercise.explanation;
+});
+
+
+
+
 
 $("newExercise").addEventListener("click", () => {
   renderExercise();
