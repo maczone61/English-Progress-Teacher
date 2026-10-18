@@ -220,6 +220,9 @@ const AI_BACKEND_URL = "https://english-progress-teacher.maczone61.workers.dev";
 
 const $ = id => document.getElementById(id);
 let sections = [];
+  let generatedLesson = null;
+let recentExerciseQuestions = [];
+let currentExercise = null;
 let currentSection = 0;
 let lessonTopic = "Nouns";
 let lessonDuration = 45;
@@ -278,38 +281,108 @@ function splitMinutes(total) {
   return result;
 }
 
-function createLesson() {
+
+async function createLesson() {
   stopSpeech();
+
   lessonTopic = $("topic").value.trim();
-  if(!lessonTopic) {
+
+  if (!lessonTopic) {
     setMessage("Please enter a lesson topic first.");
     $("topic").focus();
     return;
   }
+
   lessonDuration = Number($("duration").value);
   lessonLevel = $("level").value;
-  currentSection = 0;
-  lessonStarted = true;
-  const mins = splitMinutes(lessonDuration);
-  sections = sectionTemplates.map((item,i)=>({
-    title:item.title,
-    minutes:mins[i],
-    body:item.body(lessonTopic),
-    done:false
-  }));
-  $("lessonTitle").textContent = lessonTopic;
-  $("lessonMeta").textContent = `${lessonLevel} level · ${lessonDuration} minutes · ${sections.length} sections`;
-  $("lessonBadge").textContent = lessonDuration+" MIN LESSON";
-  show("classroom");
-  show("questionCard");
-  show("practice");
-  show("finish",false);
-  exerciseIndex = 0;
-  renderSections();
-  renderExercise();
-  setMessage("Your lesson plan is ready. This is the built-in sample lesson; connect the AI backend for topic-specific teaching.");
-  $("classroom").scrollIntoView({behavior:"smooth",block:"start"});
+
+  const button = $("startLesson");
+  button.disabled = true;
+  button.textContent = "Creating your lesson…";
+  setMessage("Your AI teacher is preparing a complete lesson about " + lessonTopic + ".");
+
+  try {
+    const response = await fetch(AI_BACKEND_URL + "/lesson-plan", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        topic: lessonTopic,
+        level: lessonLevel,
+        duration: lessonDuration
+      })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.detail || data.error || "Lesson generation failed.");
+    }
+
+    if (!data.lesson || !Array.isArray(data.lesson.sections) ||
+        data.lesson.sections.length === 0) {
+      throw new Error("The AI returned an incomplete lesson.");
+    }
+
+    generatedLesson = data.lesson;
+
+    sections = generatedLesson.sections.map(section => ({
+      title: String(section.title || "Lesson section"),
+      minutes: Number(section.minutes) || 5,
+      body: String(section.body || ""),
+      done: false
+    }));
+
+    currentSection = 0;
+    lessonStarted = true;
+    exerciseIndex = 0;
+    recentExerciseQuestions = [];
+    currentExercise = null;
+
+    $("lessonTitle").textContent =
+      generatedLesson.title || lessonTopic;
+
+    $("lessonMeta").textContent =
+      `${lessonLevel} level · ${lessonDuration} minutes · ${sections.length} sections`;
+
+    $("lessonBadge").textContent = lessonDuration + " MIN LESSON";
+
+    show("classroom");
+    show("questionCard");
+    show("practice");
+    show("finish", false);
+    show("answerArea", false);
+
+    renderSections();
+
+    $("summaryText").textContent =
+      generatedLesson.summary || "Review the lesson on " + lessonTopic + ".";
+
+    const homework = generatedLesson.homework || [];
+    $("homeworkText").textContent = Array.isArray(homework)
+      ? homework.map((item, i) => `${i + 1}. ${item}`).join("\n")
+      : String(homework);
+
+    setMessage("Your personalised AI lesson is ready. Every section is based on " +
+      lessonTopic + ".");
+
+    $("classroom").scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+
+    await renderExercise();
+
+  } catch (error) {
+    setMessage("Could not create the lesson: " +
+      error.message +
+      "\nPlease try again. If the problem continues, we will test the AI service.");
+
+  } finally {
+    button.disabled = false;
+    button.textContent = "Create my lesson →";
+  }
 }
+
 
 function renderSections() {
   const list = $("sectionList");
