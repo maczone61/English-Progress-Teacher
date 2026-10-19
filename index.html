@@ -318,19 +318,41 @@ async function createLesson() {
       throw new Error(data.detail || data.error || "Lesson generation failed.");
     }
 
-    if (!data.lesson || !Array.isArray(data.lesson.sections) ||
-        data.lesson.sections.length === 0) {
-      throw new Error("The AI returned an incomplete lesson.");
+    
+    // Accept either a wrapped or direct lesson response.
+    const lessonData = data.lesson || data;
+
+    if (
+      !lessonData ||
+      !Array.isArray(lessonData.sections) ||
+      lessonData.sections.length === 0
+    ) {
+      throw new Error(
+        "The AI response has no lesson sections. Please try again."
+      );
     }
 
-    generatedLesson = data.lesson;
+    // Standardise the lesson format for the existing app.
+    generatedLesson = {
+      title: lessonData.title || lessonTopic,
+      summary: lessonData.summary || lessonData.assessment || "",
+      homework: lessonData.homework || [],
+      sections: lessonData.sections.map((section, index) => ({
+        title: String(section.title || `Section ${index + 1}`),
+        minutes: Number(section.minutes ?? section.duration) || 5,
+        body: String(
+          section.body ?? section.content ?? section.activity ?? ""
+        )
+      }))
+    };
 
     sections = generatedLesson.sections.map(section => ({
-      title: String(section.title || "Lesson section"),
-      minutes: Number(section.minutes) || 5,
-      body: String(section.body || ""),
+      title: section.title,
+      minutes: section.minutes,
+      body: section.body,
       done: false
     }));
+
 
     currentSection = 0;
     lessonStarted = true;
