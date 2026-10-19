@@ -682,7 +682,7 @@ async function renderExercise() {
       );
     }
 
-    const e = data.exercise;
+    const e = data.exercise || data;
 
     if (
       !e ||
