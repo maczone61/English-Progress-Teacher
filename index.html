@@ -1,838 +1,316 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#101522">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#10131d">
 <title>English Progress Teacher</title>
 <style>
-:root {
-  color-scheme: dark;
-  --bg:#101522;
-  --panel:#191f30;
-  --panel2:#202940;
-  --text:#f3f5ff;
-  --muted:#a8b1c9;
-  --blue:#9aafff;
-  --green:#69e0bd;
-  --border:#303951;
-}
-*{box-sizing:border-box}
-body {
-  margin:0;background:var(--bg);color:var(--text);
-  font-family:system-ui,-apple-system,sans-serif;
-  line-height:1.6;
-}
-header {
-  padding:20px 16px 15px;
-  border-bottom:1px solid var(--border);
-  background:#141a29;
-}
-.brand{max-width:850px;margin:auto}
-.brand small{color:var(--green);font-weight:700;letter-spacing:1px}
-h1{font-size:25px;line-height:1.2;margin:7px 0}
-p{margin:8px 0}
-.muted{color:var(--muted)}
-main{max-width:850px;margin:auto;padding:18px 14px 50px}
-.card {
-  background:var(--panel);border:1px solid var(--border);
-  border-radius:16px;padding:17px;margin-bottom:15px;
-}
-h2{font-size:19px;margin:0 0 12px}
-h3{font-size:17px;margin:8px 0}
-label{display:block;font-size:14px;font-weight:650;margin:12px 0 5px}
-input,select,textarea {
-  display:block;width:100%;padding:12px;
-  color:var(--text);background:#111827;
-  border:1px solid #414c67;border-radius:10px;
-  font:inherit;font-size:16px;
-}
-textarea{resize:vertical;min-height:90px}
-button {
-  padding:11px 14px;border:0;border-radius:10px;
-  background:var(--blue);color:#111729;
-  font-weight:750;font-size:14px;cursor:pointer;
-}
-button:disabled{opacity:.5}
-button.secondary{background:var(--panel2);color:var(--text);border:1px solid #414c67}
-button.green{background:var(--green)}
-button.danger{background:#ffb7bd;color:#391017}
-.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:13px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.progress-track{height:7px;background:#303951;border-radius:20px;overflow:hidden;margin:12px 0}
-.progress-fill{height:100%;width:0;background:var(--green);transition:width .2s}
-.status{font-size:13px;color:var(--green);margin-top:8px}
-.lesson-item{
-  border:1px solid var(--border);border-radius:12px;
-  padding:12px;margin:9px 0;background:#151b2a;
-}
-.lesson-item.active{border-color:var(--blue)}
-.lesson-item.done{border-color:#377c6b}
-.lesson-item button{margin-top:8px}
-.pill{display:inline-block;padding:3px 9px;border-radius:20px;
-background:#293550;color:#d5ddff;font-size:12px}
-.teacher-text{white-space:pre-wrap;overflow-wrap:anywhere}
-.answer-option{display:block;width:100%;text-align:left;margin:8px 0}
-#appMessage{white-space:pre-wrap;overflow-wrap:anywhere}
-footer{text-align:center;color:var(--muted);font-size:12px;padding:20px}
-[hidden]{display:none!important}
-@media(max-width:480px){
- .grid{grid-template-columns:1fr}
- h1{font-size:23px}
- .card{padding:14px}
-}
+:root{color-scheme:dark;--bg:#10131d;--panel:#171c29;--panel2:#1d2434;--line:#30394c;--text:#edf1ff;--muted:#a6b0c8;--accent:#8b9dff;--mint:#69dfc1;--bad:#ff9caa;--good:#79e2bd}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 10% 0%,#202943 0,transparent 35%),var(--bg);color:var(--text);font:16px/1.6 system-ui,-apple-system,Segoe UI,sans-serif}button,input,select,textarea{font:inherit}button{cursor:pointer;border:1px solid var(--line);background:var(--panel2);color:var(--text);padding:11px 15px;border-radius:13px;font-weight:650}button:disabled{opacity:.45;cursor:wait}.primary{background:linear-gradient(135deg,#8b9dff,#69dfc1);color:#111624;border:0}.subtle{background:transparent}.wrap{max-width:920px;margin:auto;padding:18px 14px 60px}.top{display:flex;align-items:center;gap:12px;margin:10px 0 22px}.logo{width:44px;height:44px;border-radius:15px;background:linear-gradient(135deg,var(--accent),var(--mint));display:grid;place-items:center;color:#111624;font-weight:900;font-size:20px}.brand{font-size:20px;font-weight:800;letter-spacing:-.4px}.tag{font-size:12px;color:var(--muted)}.card{background:linear-gradient(160deg,rgba(29,36,52,.98),rgba(23,28,41,.98));border:1px solid var(--line);border-radius:22px;padding:20px;margin:13px 0;box-shadow:0 12px 30px #0002}.eyebrow{text-transform:uppercase;letter-spacing:1.4px;color:var(--mint);font-size:11px;font-weight:800}.hero h1{font-size:clamp(27px,6vw,42px);line-height:1.12;letter-spacing:-1.2px;margin:8px 0 12px}.muted{color:var(--muted)}.field{display:grid;gap:6px;margin:12px 0}.field label{font-size:13px;color:var(--muted);font-weight:700}input,select,textarea{width:100%;background:#101522;border:1px solid var(--line);border-radius:12px;padding:12px;color:var(--text);outline:none}input:focus,select:focus,textarea:focus{border-color:var(--accent)}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:15px}.progress{height:6px;background:#30394c;border-radius:10px;overflow:hidden;margin:12px 0}.progress>div{height:100%;background:linear-gradient(90deg,var(--accent),var(--mint));width:0;transition:width .25s}.section-no{color:var(--mint);font-size:12px;font-weight:800}.lesson-content{font-size:16px;white-space:pre-wrap}.lesson-content strong{color:#fff}.objectives{padding-left:21px}.pill{display:inline-block;background:#252f45;color:#d7e0ff;border-radius:30px;padding:4px 10px;font-size:12px;margin:2px}.question-card{background:#131927;border:1px solid var(--line);border-radius:16px;padding:15px;margin:12px 0}.options{display:grid;gap:9px;margin-top:12px}.option{text-align:left;width:100%;font-weight:500}.option.chosen{border-color:var(--accent);background:#2a3450}.option.correct{border-color:var(--good);background:#17372f}.option.wrong{border-color:var(--bad);background:#3a222c}.feedback{padding:12px;border-radius:12px;background:#20293b;margin-top:12px}.hidden{display:none!important}.status{padding:11px 13px;border-radius:12px;background:#20293b;color:var(--muted);margin:12px 0}.status.error{background:#3a222c;color:#ffd9df}.status.success{background:#17372f;color:#c8ffeb}.table-scroll{overflow-x:auto}table{border-collapse:collapse;width:100%;margin:12px 0}td,th{border:1px solid var(--line);padding:9px;text-align:left}code{white-space:pre-wrap;word-break:break-word}.footer{text-align:center;color:var(--muted);font-size:12px;margin-top:25px}.mini{font-size:13px}.badge{border:1px solid var(--line);border-radius:10px;padding:4px 8px;font-size:12px;color:var(--muted)}.bar{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}@media(max-width:560px){.grid{grid-template-columns:1fr}.card{padding:16px;border-radius:18px}.brand{font-size:18px}.wrap{padding-left:11px;padding-right:11px}}
 </style>
 </head>
 <body>
-<header>
-  <div class="brand">
-    <small>YOUR PERSONAL ENGLISH TEACHER</small>
-    <h1>English Progress Teacher</h1>
-    <div class="muted">Structured lessons. Clear explanations. Learn at your pace.</div>
-  </div>
-</header>
+<div class="wrap">
+  <header class="top">
+    <div class="logo">E</div>
+    <div><div class="brand">English Progress Teacher</div><div class="tag">A structured path to better English</div></div>
+    <span class="badge" style="margin-left:auto">Lesson + practice</span>
+  </header>
 
-<main>
-  <section class="card" id="setup">
-    <h2>Plan your lesson</h2>
-    <p class="muted">Choose a topic and lesson duration to get started.</p>
-    <label for="topic">What would you like to learn?</label>
-    <input id="topic" value="Nouns" placeholder="e.g. Tenses, Articles, Sentence Structure">
-    <div class="actions">
-      <button class="secondary" id="speakTopic">🎙 Say topic</button>
+  <section id="setup" class="card hero">
+    <div class="eyebrow">Your personal English teacher</div>
+    <h1>Learn a topic.<br>Practise the right way.</h1>
+    <p class="muted">Each lesson is organised into short teaching sections. Exercises are selected to match the topic, not forced into one question format.</p>
+    <div class="field"><label for="topic">Topic to learn</label>
+      <input id="topic" value="Nouns and their types" placeholder="e.g. Question tags, narration, punctuation">
     </div>
     <div class="grid">
-      <div>
-        <label for="level">Your English level</label>
-        <select id="level">
-          <option>Beginner</option>
-          <option selected>Elementary</option>
-          <option>Intermediate</option>
-          <option>Advanced</option>
-        </select>
-      </div>
-      <div>
-        <label for="duration">Lesson duration</label>
-        <select id="duration">
-          <option value="30">30 minutes</option>
-          <option value="45" selected>45 minutes</option>
-          <option value="60">60 minutes</option>
-        </select>
-      </div>
+      <div class="field"><label for="level">Learner level</label><select id="level"><option>Beginner</option><option selected>Elementary</option><option>Pre-intermediate</option><option>Intermediate</option><option>Upper-intermediate</option><option>Advanced</option></select></div>
+      <div class="field"><label for="classLevel">Class / grade</label><select id="classLevel"><option>Not specified</option><option>Class 6</option><option>Class 7</option><option>Class 8</option><option>Class 9</option><option selected>Class 10 / SSC</option><option>Class 11 / HSC</option><option>Class 12 / HSC</option><option>Adult learner</option></select></div>
     </div>
-    <div class="actions">
-      <button class="green" id="startLesson">Create my lesson →</button>
-    </div>
-    <p class="muted" style="font-size:12px">The initial version uses built-in sample teaching material. AI lesson generation will be connected separately.</p>
-  </section>
-
-  <section class="card" id="classroom" hidden>
-    <span class="pill" id="lessonBadge">LESSON</span>
-    <h2 id="lessonTitle" style="margin-top:10px">Your lesson</h2>
-    <p class="muted" id="lessonMeta"></p>
-    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
-    <p class="muted" id="progressText">Section 1 of 5</p>
-
+    <div class="field"><label for="curriculum">Curriculum focus</label><select id="curriculum"><option selected>Bangladesh school curriculum (NCTB / SSC-HSC style where relevant)</option><option>International English / CEFR-informed</option><option>Both Bangladesh and international</option></select></div>
+    <div class="field"><label for="goals">Specific scope (optional)</label><textarea id="goals" rows="2" placeholder="e.g. common, proper, collective and abstract nouns only"></textarea></div>
     <div class="grid">
-      <div>
-        <label for="voice">Teacher's voice</label>
-        <select id="voice"><option value="">Default English voice</option></select>
-      </div>
-      <div>
-        <label for="speed">Speaking speed</label>
-        <select id="speed">
-          <option value="0.7">Very slow</option>
-          <option value="0.85" selected>Slow and clear</option>
-          <option value="1">Normal</option>
-          <option value="1.1">Faster</option>
-        </select>
-      </div>
+      <div class="field"><label for="count">Practice questions</label><select id="count"><option value="20">20 questions</option><option value="50" selected>50 questions</option><option value="100">100 questions</option></select></div>
+      <div class="field"><label for="autoVoice">Lesson read-aloud</label><select id="autoVoice"><option value="off">Off — read on screen</option><option value="on" selected>On — speak sections in sequence</option></select></div>
     </div>
-
-    <div class="actions">
-      <button id="readSection">🔊 Teach this section</button>
-      <button class="secondary" id="pauseSpeech">Pause</button>
-      <button class="danger" id="interrupt">🎙 Interrupt / ask</button>
-    </div>
-    <p class="status" id="speechStatus" aria-live="polite">Teacher is ready.</p>
-
-    <div id="sectionList"></div>
-
-    <div class="actions">
-      <button class="secondary" id="previousSection">← Previous</button>
-      <button class="green" id="nextSection">Next section →</button>
-    </div>
+    <div class="actions"><button class="primary" id="startBtn">Build my lesson</button><button class="subtle" id="demoBtn">See supported topic types</button></div>
+    <div id="setupStatus" class="status hidden"></div>
+    <div id="topicTypes" class="status hidden mini">Parts of speech and subtypes · articles · prepositions · connectors · prefixes/suffixes · question tags · punctuation · substitution tables · sentence reordering · WH-questions · sentence transformation · simple/complex/compound sentences · subject–verb agreement · tenses · right forms of verbs · narration · sentence correction.</div>
   </section>
 
-  <section class="card" id="questionCard" hidden>
-    <h2>Ask your teacher</h2>
-    <p class="muted">Interrupt the spoken lesson to ask a question. You can also type.</p>
-    <textarea id="question" placeholder="For example: Why is 'information' an uncountable noun?"></textarea>
+  <section id="lesson" class="card hidden">
+    <div class="bar"><span class="eyebrow">Your lesson</span><span id="lessonLevel" class="badge"></span></div>
+    <h2 id="lessonTitle"></h2>
+    <div id="objectivesWrap"></div>
+    <div class="progress"><div id="lessonProgress"></div></div>
+    <div class="bar"><span id="sectionCount" class="section-no"></span><span id="readStatus" class="mini muted"></span></div>
+    <h3 id="sectionTitle"></h3>
+    <div id="sectionContent" class="lesson-content"></div>
+    <div id="sectionActivity" class="question-card"></div>
     <div class="actions">
-      <button id="askQuestion">Ask question</button>
-      <button class="secondary" id="listenQuestion">🎙 Speak question</button>
+      <button id="prevSection" class="subtle">Previous</button>
+      <button id="speakSection">Read this section</button>
+      <button id="nextSection" class="primary">Continue</button>
+      <button id="stopVoice" class="subtle">Stop voice</button>
     </div>
-    <div id="answerArea" class="lesson-item" hidden>
-      <strong>Your teacher's answer</strong>
-      <p id="answerText" class="teacher-text"></p>
-      <button class="secondary" id="speakAnswer">🔊 Read answer aloud</button>
-      <button class="green" id="resumeLesson">Resume lesson →</button>
-    </div>
+    <div id="lessonStatus" class="status hidden"></div>
   </section>
 
-  <section class="card" id="practice" hidden>
-    <h2>Practice and check your understanding</h2>
-    <p id="exercisePrompt"></p>
-    <div id="exerciseOptions"></div>
-    <p id="exerciseFeedback" aria-live="polite"></p>
-    <div class="actions">
-      <button id="checkAnswer">Check answer</button>
-      <button class="secondary" id="newExercise">Next question</button>
-    </div>
+  <section id="exercise" class="card hidden">
+    <div class="bar"><span class="eyebrow">Topic-matched practice</span><span id="exerciseCount" class="badge"></span></div>
+    <h2 id="exerciseTitle">Apply what you learned</h2>
+    <p class="muted mini" id="exerciseIntro"></p>
+    <div class="progress"><div id="exerciseProgress"></div></div>
+    <div id="questionHost"></div>
+    <div class="bar"><span id="scoreText" class="muted mini"></span><span id="questionNo" class="section-no"></span></div>
+    <div class="actions"><button id="checkAnswer" class="primary">Check answer</button><button id="nextQuestion">Next question</button><button id="finishExercise" class="subtle">Finish exercise</button></div>
+    <div id="exerciseStatus" class="status hidden"></div>
   </section>
 
-  <section class="card" id="finish" hidden>
-    <h2>Homework and lesson summary</h2>
-    <div id="summaryText" class="teacher-text"></div>
-    <label for="homework">Your homework</label>
-    <div id="homeworkText" class="teacher-text"></div>
-    <div class="actions">
-      <button id="readSummary">🔊 Read summary</button>
-      <button class="green" id="newLesson">Plan another lesson</button>
-    </div>
+  <section id="summary" class="card hidden">
+    <div class="eyebrow">Learning report</div><h2 id="summaryTitle">Practice complete</h2><div id="summaryBody"></div>
+    <div class="actions"><button id="retryWeak" class="primary">Practise this topic again</button><button id="newTopic" class="subtle">Choose another topic</button></div>
   </section>
-
-  <section class="card" id="messageCard">
-    <h2>Teacher's message</h2>
-    <p id="appMessage" class="muted" aria-live="polite">Welcome! Choose a topic to begin your lesson.</p>
-  </section>
-</main>
-<footer>English Progress Teacher · Learning one step at a time</footer>
-
+  <div class="footer">English Progress Teacher · Topic-specific learning and practice</div>
+</div>
 <script>
-"use strict";
-
-/*
-  AI_BACKEND_URL will be configured after the separate backend is deployed.
-  Do not put secret API keys in this public HTML file.
-*/
-const AI_BACKEND_URL = "https://english-progress-teacher.maczone61.workers.dev";
-
-const $ = id => document.getElementById(id);
-let sections = [];
-  let generatedLesson = null;
-let recentExerciseQuestions = [];
-let currentExercise = null;
-let currentSection = 0;
-let lessonTopic = "Nouns";
-let lessonDuration = 45;
-let lessonLevel = "Elementary";
-let recognition = null;
-let listeningPurpose = "question";
-let chosenAnswer = null;
-let exerciseIndex = 0;
-let lessonStarted = false;
-
-const sectionTemplates = [
-  {
-    title:"Learning objectives",
-    minutes:3,
-    body:t=>`Welcome to your lesson on ${t}!\n\nBy the end of this lesson, you should be able to:\n• Explain the main idea of ${t}.\n• Recognise it in English sentences.\n• Use it in your own examples.\n\nFirst, think about what you already know. Do not worry about mistakes. Mistakes are part of learning.`
-  },
-  {
-    title:"Clear explanation",
-    minutes:10,
-    body:t=>`${t}: the main idea\n\nLet's understand ${t} step by step.\n\nA good way to learn a grammar topic is to understand its meaning, examine examples, and then practise using it.\n\nRead each example carefully. Ask yourself what the important word or structure means and how it works in the sentence.\n\nExample 1: She reads a book every day.\nExample 2: They are learning English.\nExample 3: We went to school yesterday.\n\nThese examples show that English meaning depends on the words we choose and how we arrange them. We will connect these ideas to ${t} during the practice activities.`
-  },
-  {
-    title:"Examples and guided practice",
-    minutes:10,
-    body:t=>`Let's study some examples related to ${t}.\n\nExample A: The student answered the question.\nExample B: My friends play football.\nExample C: I am reading an interesting book.\n\nAsk yourself:\n1. Who or what is the sentence about?\n2. What action or idea does it express?\n3. Which word or structure connects to today's topic?\n\nNow make your own sentence using ${t}. Start with a simple sentence and make it more detailed if you can.`
-  },
-  {
-    title:"Learner practice",
-    minutes:10,
-    body:t=>`Now it is your turn to practise ${t}.\n\nTask 1: Write one sentence that demonstrates the topic.\nTask 2: Write a second sentence with a different subject or situation.\nTask 3: Explain in your own words why your examples are correct.\n\nTake your time. You can ask me a question at any time using the Interrupt / ask button.\n\nRemember: understanding a rule is important, but using it correctly is the real goal.`
-  },
-  {
-    title:"Review and next steps",
-    minutes:5,
-    body:t=>`Let's review today's lesson on ${t}.\n\n• We introduced the topic and its learning objectives.\n• We examined explanations and example sentences.\n• You practised creating your own examples.\n• You can review anything that remains unclear.\n\nBefore finishing, explain one important thing you learned about ${t}.\n\nAfter the lesson, complete the homework and revisit the examples. Regular short practice is often more effective than studying everything at once.`
+(() => {
+  const API = "https://english-progress-teacher.maczone61.workers.dev";
+  const $ = id => document.getElementById(id);
+  const state = {
+    lesson:null, sectionIndex:0, questions:[], qIndex:0, answers:[],
+    selected:null, typed:"", score:0, checked:false, generated:0,
+    recent:[], seen:new Set(), currentTopic:"", currentLevel:"", count:50, voiceOn:true
+  };
+  const hide = el => el.classList.add("hidden");
+  const show = el => el.classList.remove("hidden");
+  function status(id,msg,type="") {
+    const el=$(id); el.textContent=msg; el.className="status"+(type?" "+type:"");
+    show(el);
   }
-];
-
-function setMessage(message) {
-  $("appMessage").textContent = message;
-}
-function show(id, yes=true) {
-  $(id).hidden = !yes;
-}
-function escapeText(value) {
-  return String(value).replace(/[&<>"']/g, c => ({
-    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
-  }[c]));
-}
-function splitMinutes(total) {
-  const weights = [1,3,3,3,1];
-  const sum = weights.reduce((a,b)=>a+b,0);
-  const result = weights.map(w=>Math.floor(total*w/sum));
-  let remaining = total-result.reduce((a,b)=>a+b,0);
-  for(let i=0;remaining>0;i=(i+1)%result.length,remaining--) result[i]++;
-  return result;
-}
-
-
-async function createLesson() {
-  stopSpeech();
-
-  lessonTopic = $("topic").value.trim();
-
-  if (!lessonTopic) {
-    setMessage("Please enter a lesson topic first.");
-    $("topic").focus();
-    return;
+  function clearStatus(id){hide($(id));}
+  function setBusy(btn,busy,label="Working…") {
+    if(busy){btn.dataset.old=btn.textContent;btn.textContent=label;btn.disabled=true;}
+    else {btn.textContent=btn.dataset.old||btn.textContent;btn.disabled=false;}
   }
-
-  lessonDuration = Number($("duration").value);
-  lessonLevel = $("level").value;
-
-  const button = $("startLesson");
-  button.disabled = true;
-  button.textContent = "Creating your lesson…";
-  setMessage("Your AI teacher is preparing a complete lesson about " + lessonTopic + ".");
-
-  try {
-    const response = await fetch(AI_BACKEND_URL + "/lesson-plan", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        topic: lessonTopic,
-        level: lessonLevel,
-        duration: lessonDuration
-      })
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data.detail || data.error || "Lesson generation failed.");
-    }
-
-    
-    // Accept either a wrapped or direct lesson response.
-    const lessonData = data.lesson || data;
-
-    if (
-      !lessonData ||
-      !Array.isArray(lessonData.sections) ||
-      lessonData.sections.length === 0
-    ) {
-      throw new Error(
-        "The AI response has no lesson sections. Please try again."
-      );
-    }
-
-    // Standardise the lesson format for the existing app.
-    generatedLesson = {
-      title: lessonData.title || lessonTopic,
-      summary: lessonData.summary || lessonData.assessment || "",
-      homework: lessonData.homework || [],
-      sections: lessonData.sections.map((section, index) => ({
-        title: String(section.title || `Section ${index + 1}`),
-        minutes: Number(section.minutes ?? section.duration) || 5,
-        body: String(
-          section.body ?? section.content ?? section.activity ?? ""
-        )
-      }))
+  async function api(path,body) {
+    const response=await fetch(API+path,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
+    const data=await response.json().catch(()=>({error:"The server returned an unreadable response."}));
+    if(!response.ok || data.error) throw new Error(data.error || `Request failed (${response.status})`);
+    return data;
+  }
+  function topicContext(){
+    return {topic:state.currentTopic,level:state.currentLevel,classLevel:$("classLevel").value,curriculum:$("curriculum").value,objectives:$("goals").value.trim()};
+  }
+  function stopSpeech(){if("speechSynthesis" in window) speechSynthesis.cancel();}
+  function say(text,autoAdvance=false){
+    if(!("speechSynthesis" in window)){status("lessonStatus","Read-aloud is not supported in this browser. You can continue using the on-screen lesson.");return;}
+    stopSpeech();
+    const utterance=new SpeechSynthesisUtterance(text);
+    utterance.lang="en-GB"; utterance.rate=0.88; utterance.pitch=1;
+    $("readStatus").textContent="Speaking…";
+    utterance.onend=()=>{
+      $("readStatus").textContent="Section finished";
+      if(autoAdvance && state.sectionIndex < state.lesson.sections.length-1) setTimeout(()=>renderSection(state.sectionIndex+1,true),450);
+      else if(autoAdvance && state.sectionIndex===state.lesson.sections.length-1) setTimeout(beginExercises,450);
     };
-
-    sections = generatedLesson.sections.map(section => ({
-      title: section.title,
-      minutes: section.minutes,
-      body: section.body,
-      done: false
-    }));
-
-
-    currentSection = 0;
-    lessonStarted = true;
-    exerciseIndex = 0;
-    recentExerciseQuestions = [];
-    currentExercise = null;
-
-    $("lessonTitle").textContent =
-      generatedLesson.title || lessonTopic;
-
-    $("lessonMeta").textContent =
-      `${lessonLevel} level · ${lessonDuration} minutes · ${sections.length} sections`;
-
-    $("lessonBadge").textContent = lessonDuration + " MIN LESSON";
-
-    show("classroom");
-    show("questionCard");
-    show("practice");
-    show("finish", false);
-    show("answerArea", false);
-
-    renderSections();
-
-    $("summaryText").textContent =
-      generatedLesson.summary || "Review the lesson on " + lessonTopic + ".";
-
-    const homework = generatedLesson.homework || [];
-    $("homeworkText").textContent = Array.isArray(homework)
-      ? homework.map((item, i) => `${i + 1}. ${item}`).join("\n")
-      : String(homework);
-
-    setMessage("Your personalised AI lesson is ready. Every section is based on " +
-      lessonTopic + ".");
-
-    $("classroom").scrollIntoView({
-      behavior: "smooth",
-      block: "start"
-    });
-
-    await renderExercise();
-
-  } catch (error) {
-    setMessage("Could not create the lesson: " +
-      error.message +
-      "\nPlease try again. If the problem continues, we will test the AI service.");
-
-  } finally {
-    button.disabled = false;
-    button.textContent = "Create my lesson →";
+    utterance.onerror=()=>{$("readStatus").textContent="Read-aloud stopped";};
+    speechSynthesis.speak(utterance);
   }
-}
-
-
-function renderSections() {
-  const list = $("sectionList");
-  list.innerHTML = "";
-  sections.forEach((s,i)=>{
-    const div = document.createElement("div");
-    div.className = "lesson-item"+(i===currentSection?" active":"")+(s.done?" done":"");
-    const title = document.createElement("h3");
-    title.textContent = `${i+1}. ${s.title}`;
-    const meta = document.createElement("span");
-    meta.className = "pill";
-    meta.textContent = `${s.minutes} min${s.done?" · Completed":""}`;
-    const body = document.createElement("p");
-    body.className = "teacher-text";
-    body.textContent = s.body;
-    const btn = document.createElement("button");
-    btn.className = "secondary";
-    btn.textContent = i===currentSection?"Current section":"Open section";
-    btn.addEventListener("click",()=> {
-      stopSpeech();
-      currentSection=i;
-      renderSections();
-      updateProgress();
-    });
-    div.append(title,meta,body,btn);
-    list.appendChild(div);
-  });
-  updateProgress();
-}
-
-function updateProgress() {
-  const done = sections.filter(s=>s.done).length;
-  const percentage = sections.length ? Math.round(done/sections.length*100) : 0;
-  $("progressFill").style.width = percentage+"%";
-  $("progressText").textContent = `${done} of ${sections.length} sections completed · ${percentage}%`;
-}
-
-function stopSpeech() {
-  if("speechSynthesis" in window) window.speechSynthesis.cancel();
-  $("speechStatus").textContent = "Speech stopped.";
-}
-function getVoice() {
-  const voices = speechSynthesis.getVoices();
-  return voices.find(v=>v.name===$("voice").value) ||
-         voices.find(v=>/^en[-_]/i.test(v.lang)) || null;
-}
-function speak(text, onEnd) {
-  if(!("speechSynthesis" in window)) {
-    $("speechStatus").textContent = "Speech synthesis is not supported in this browser.";
-    return;
-  }
-  speechSynthesis.cancel();
-  const utterance = new SpeechSynthesisUtterance(text);
-  utterance.rate = Number($("speed").value);
-  utterance.lang = "en-US";
-  const voice = getVoice();
-  if(voice) {
-    utterance.voice=voice;
-    utterance.lang=voice.lang;
-  }
-  utterance.onstart=()=> $("speechStatus").textContent="Teacher is speaking. Tap Interrupt / ask to stop and ask a question.";
-  utterance.onend=()=> {
-    $("speechStatus").textContent="Teacher has finished speaking.";
-    if(onEnd) onEnd();
-  };
-  utterance.onerror=(e)=> {
-    if(e.error!=="canceled" && e.error!=="interrupted")
-      $("speechStatus").textContent="Speech could not play. You can continue reading the text.";
-  };
-  speechSynthesis.speak(utterance);
-}
-
-function teachSection() {
-  if(!sections.length) return;
-  const s=sections[currentSection];
-  s.done=true;
-  renderSections();
-  speak(`${s.title}. ${s.body}`,()=>{
-    setMessage("Section finished. You can review it, ask a question, or move to the next section.");
-  });
-}
-
-function goNext() {
-  if(!sections.length) return;
-  stopSpeech();
-  sections[currentSection].done=true;
-  if(currentSection < sections.length-1) {
-    currentSection++;
-    renderSections();
-    setMessage("Ready for "+sections[currentSection].title+". Tap Teach this section when you are ready.");
-  } else {
-    renderSections();
-    show("finish");
-    const doneCount=sections.filter(s=>s.done).length;
-    $("summaryText").textContent=`Topic: ${lessonTopic}\nLevel: ${lessonLevel}\nPlanned duration: ${lessonDuration} minutes\n\nYou have reached the end of the lesson plan. Review the explanations and practise making your own examples about ${lessonTopic}.\n\nSections completed: ${doneCount} of ${sections.length}.`;
-    $("homeworkText").textContent=`1. Write five original sentences related to ${lessonTopic}.\n2. Review today's examples and explain the rule in your own words.\n3. Identify and correct any mistakes in your sentences.\n4. Return to this topic tomorrow and try again without looking at the notes.`;
-    setMessage("You have reached the end of the lesson. Review the summary and complete your homework.");
-    $("finish").scrollIntoView({behavior:"smooth",block:"start"});
-  }
-}
-function goPrevious() {
-  if(!sections.length) return;
-  stopSpeech();
-  currentSection=Math.max(0,currentSection-1);
-  renderSections();
-}
-
-function loadVoices() {
-  if(!("speechSynthesis" in window)) return;
-  const select=$("voice");
-  const existing=select.value;
-  const voices=speechSynthesis.getVoices().filter(v=>/^en[-_]/i.test(v.lang));
-  select.innerHTML='<option value="">Default English voice</option>';
-  voices.forEach(v=>{
-    const opt=document.createElement("option");
-    opt.value=v.name;
-    opt.textContent=`${v.name} (${v.lang})`;
-    select.appendChild(opt);
-  });
-  if(voices.some(v=>v.name===existing)) select.value=existing;
-}
-if("speechSynthesis" in window) {
-  loadVoices();
-  speechSynthesis.onvoiceschanged=loadVoices;
-}
-
-function makeRecognition() {
-  const SR=window.SpeechRecognition || window.webkitSpeechRecognition;
-  if(!SR) return null;
-  const r=new SR();
-  r.lang="en-US";
-  r.interimResults=false;
-  r.maxAlternatives=1;
-  return r;
-}
-
-function beginListening(purpose) {
-  stopSpeech();
-  if(recognition) {
-    try{recognition.abort();}catch(e){}
-    recognition=null;
-  }
-  recognition=makeRecognition();
-  listeningPurpose=purpose;
-  if(!recognition) {
-    $("speechStatus").textContent="Voice recognition is unavailable here. Please type your question below.";
-    $("question").focus();
-    return;
-  }
-  recognition.onstart=()=> {
-    $("speechStatus").textContent="Listening. Speak now, then pause.";
-    setMessage("Listening for your question. Speak clearly.");
-  };
-  recognition.onresult=event=>{
-    const transcript=event.results[0][0].transcript;
-    if(purpose==="topic") {
-      $("topic").value=transcript;
-      setMessage("Topic captured: "+transcript);
-    } else {
-      $("question").value=transcript;
-      answerQuestion();
+  function renderSection(index,autoSpeak=false){
+    if(!state.lesson) return;
+    state.sectionIndex=Math.max(0,Math.min(index,state.lesson.sections.length-1));
+    const s=state.lesson.sections[state.sectionIndex];
+    $("lessonTitle").textContent=state.lesson.title;
+    $("lessonLevel").textContent=state.currentLevel+" · "+$("classLevel").value;
+    $("sectionCount").textContent=`SECTION ${state.sectionIndex+1} OF ${state.lesson.sections.length}`;
+    $("lessonProgress").style.width=((state.sectionIndex+1)/state.lesson.sections.length*100)+"%";
+    $("sectionTitle").textContent=s.title;
+    $("sectionContent").textContent=s.content;
+    $("sectionActivity").innerHTML="";
+    const a=document.createElement("div");
+    a.innerHTML="<strong>Quick learning activity</strong>";
+    const p=document.createElement("p");p.textContent=s.activity||"Summarise the key rule in your own words.";
+    a.appendChild(p);
+    if(Array.isArray(s.keyPoints)&&s.keyPoints.length){
+      const ul=document.createElement("ul");
+      s.keyPoints.forEach(k=>{const li=document.createElement("li");li.textContent=k;ul.appendChild(li);});
+      a.appendChild(ul);
     }
-  };
-  recognition.onerror=event=>{
-    $("speechStatus").textContent="Could not capture speech ("+event.error+"). Please type your question if needed.";
-  };
-  recognition.onend=()=> {
-    if(purpose==="topic") $("speechStatus").textContent="Topic voice input finished.";
-    else if(!$("question").value.trim()) $("speechStatus").textContent="Listening ended. Try again or type your question.";
-  };
-  try{recognition.start();}
-  catch(e){
-    $("speechStatus").textContent="Microphone could not start. Try again or type your question.";
+    $("sectionActivity").appendChild(a);
+    $("prevSection").disabled=state.sectionIndex===0;
+    $("nextSection").textContent=state.sectionIndex===state.lesson.sections.length-1?"Start topic-matched exercises":"Continue";
+    clearStatus("lessonStatus");
+    if(autoSpeak && state.voiceOn) say(`${s.title}. ${s.content}. Learning activity. ${s.activity}`,true);
   }
-}
-
-function fallbackAnswer(q) {
-  const text=q.toLowerCase();
-  if(/\b(example|examples)\b/.test(text))
-    return `Here are examples related to ${lessonTopic}:\n\n1. The student reads a book.\n2. My sister speaks English.\n3. They are studying today.\n\nLook at each sentence and identify the part connected to your question. These are general examples; an AI-connected teacher will give topic-specific examples.`;
-  if(/\b(repeat|again|simpler|simple|understand|explain)\b/.test(text))
-    return `Let's make it simpler. ${lessonTopic} is the topic we are studying. First, look at one example. Then identify the important words or structure, and finally create a similar sentence of your own.\n\nTell me which exact part is confusing you, and I can help more when the AI teacher is connected.`;
-  if(/\b(noun|pronoun|verb|adjective|adverb)\b/.test(text))
-    return `A noun names a person, place, thing, or idea (teacher, school, book, happiness). A pronoun can replace a noun (he, she, they, it). A verb expresses an action or state (read, speak, be). An adjective describes a noun (a difficult question). An adverb can describe a verb, adjective, or another adverb (speaks clearly).\n\nYour question is about ${lessonTopic}. This is a basic reference answer, not yet an AI-generated response.`;
-  return `Thank you for asking: "${q}"\n\nI have stopped the spoken lesson so you can ask your question. The current version has a basic built-in response, but it is not yet connected to an AI model. We'll connect the separate backend next so your teacher can answer this specific question intelligently and resume at the correct lesson section.`;
-}
-
-async function answerQuestion() {
-  const q=$("question").value.trim();
-  if(!q) {
-    setMessage("Please type or speak a question first.");
-    $("question").focus();
-    return;
+  async function startLesson(){
+    const topic=$("topic").value.trim();
+    if(!topic){status("setupStatus","Enter a topic first.","error");return;}
+    state.currentTopic=topic;state.currentLevel=$("level").value;state.count=Number($("count").value);
+    state.voiceOn=$("autoVoice").value==="on";
+    const btn=$("startBtn");setBusy(btn,true,"Preparing lesson…");clearStatus("setupStatus");
+    try{
+      state.lesson=await api("/lesson-plan",topicContext());
+      state.sectionIndex=0;state.questions=[];state.answers=[];state.qIndex=0;state.score=0;state.seen=new Set();state.recent=[];
+      hide($("exercise"));hide($("summary"));show($("lesson"));
+      $("objectivesWrap").innerHTML="";
+      const heading=document.createElement("h3");heading.textContent="By the end, you should be able to";$("objectivesWrap").appendChild(heading);
+      const ul=document.createElement("ul");ul.className="objectives";
+      (state.lesson.objectives||[]).forEach(o=>{const li=document.createElement("li");li.textContent=o;ul.appendChild(li);});
+      $("objectivesWrap").appendChild(ul);
+      renderSection(0,state.voiceOn);
+      $("lesson").scrollIntoView({behavior:"smooth",block:"start"});
+    }catch(e){status("setupStatus",e.message+" Check that the Worker is deployed and its AI binding is named AI.","error");}
+    finally{setBusy(btn,false);}
   }
-  stopSpeech();
-  show("answerArea");
-  $("answerText").textContent="Preparing your answer…";
-  setMessage("Your question has been received.");
-  try {
-    if(AI_BACKEND_URL) {
-      const response=await fetch(AI_BACKEND_URL.replace(/\/$/,"")+"/teach",{
-        method:"POST",
-        headers:{"Content-Type":"application/json"},
-        body:JSON.stringify({
-          action:"question",
-          topic:lessonTopic,
-          level:lessonLevel,
-          duration:lessonDuration,
-          current_section:sections[currentSection]?.title || "",
-          question:q,
-          lesson_plan:sections.map(s=>({title:s.title,body:s.body,done:s.done}))
-        })
-      });
-      if(!response.ok) throw new Error("Backend response "+response.status);
-      const data=await response.json();
-      $("answerText").textContent=data.text || data.answer || fallbackAnswer(q);
-    } else {
-      $("answerText").textContent=fallbackAnswer(q);
+  function nextSection(){
+    stopSpeech();
+    if(state.sectionIndex<state.lesson.sections.length-1) renderSection(state.sectionIndex+1,state.voiceOn);
+    else beginExercises();
+  }
+  function previousSection(){stopSpeech();renderSection(state.sectionIndex-1,state.voiceOn);}
+  async function getBatch(){
+    const payload={...topicContext(),lesson:state.lesson,count:Math.min(10,state.count-state.questions.length),batchSize:10,existingQuestions:state.questions.map(q=>q.prompt),recentQuestions:state.recent};
+    const data=await api("/exercise-set",payload);
+    const qs=Array.isArray(data.questions)?data.questions:[];
+    for(const q of qs){
+      const key=String(q.prompt||q.question||"").toLowerCase().replace(/[^a-z0-9 ]/g,"").replace(/\s+/g," ").trim();
+      if(key && !state.seen.has(key)){state.seen.add(key);state.questions.push(q);}
     }
-  } catch(e) {
-    $("answerText").textContent=fallbackAnswer(q)+"\n\nThe AI service could not be reached, so this is a fallback answer.";
+    state.generated=state.questions.length;
+    if(!qs.length) throw new Error(data.message||"No valid questions were generated. Please try again.");
   }
-  $("answerArea").scrollIntoView({behavior:"smooth",block:"nearest"});
-}
-
-
-async function renderExercise() {
-  const prompt = $("exercisePrompt");
-  const optionsBox = $("exerciseOptions");
-  const nextButton = $("newExercise");
-  const checkButton = $("checkAnswer");
-  const feedback = $("exerciseFeedback");
-
-  stopSpeech();
-  currentExercise = null;
-  chosenAnswer = null;
-
-  prompt.textContent = "Your AI teacher is preparing a new question…";
-  optionsBox.innerHTML = "";
-  feedback.textContent = "";
-  checkButton.disabled = true;
-  nextButton.disabled = true;
-
-  try {
-    const response = await fetch(
-      AI_BACKEND_URL.replace(/\/$/, "") + "/exercise",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        cache: "no-store",
-        body: JSON.stringify({
-          topic: lessonTopic,
-          level: lessonLevel,
-          recent_questions: recentExerciseQuestions.slice(-20)
-        })
-      }
-    );
-
-    const responseText = await response.text();
-    let data;
-
-    try {
-      data = JSON.parse(responseText);
-    } catch (_) {
-      throw new Error(
-        "The AI service returned an invalid response. Please try again."
-      );
-    }
-
-    if (!response.ok) {
-      throw new Error(
-        data.detail ||
-        data.error ||
-        "Question generation failed (HTTP " + response.status + ")."
-      );
-    }
-
-    const e = data.exercise || data;
-
-    if (
-      !e ||
-      typeof e.question !== "string" ||
-      !e.question.trim() ||
-      !Array.isArray(e.options) ||
-      e.options.length !== 4 ||
-      !e.options.every(
-        option => typeof option === "string" && option.trim()
-      ) ||
-      new Set(e.options.map(
-        option => option.trim().toLowerCase()
-      )).size !== 4 ||
-      !Number.isInteger(e.correctIndex) ||
-      e.correctIndex < 0 ||
-      e.correctIndex > 3 ||
-      typeof e.explanation !== "string" ||
-      !e.explanation.trim()
-    ) {
-      throw new Error(
-        "The AI returned an incomplete or invalid question. Try again."
-      );
-    }
-
-    currentExercise = e;
-
-    recentExerciseQuestions.push(e.question);
-    if (recentExerciseQuestions.length > 20) {
-      recentExerciseQuestions.shift();
-    }
-
-    exerciseIndex++;
-    prompt.textContent = `Question ${exerciseIndex}: ${e.question}`;
-    feedback.style.color = "#f3f5ff";
-
-    e.options.forEach((option, i) => {
-      const button = document.createElement("button");
-      button.type = "button";
-      button.className = "secondary answer-option";
-      button.textContent =
-        String.fromCharCode(65 + i) + ". " + option;
-
-      button.addEventListener("click", () => {
-        chosenAnswer = i;
-
-        [...optionsBox.children].forEach(item => {
-          item.style.borderColor = "#414c67";
-        });
-
-        button.style.borderColor = "#9aafff";
-        feedback.style.color = "#f3f5ff";
-        feedback.textContent = "Answer selected. Tap Check answer.";
-      });
-
-      optionsBox.appendChild(button);
-    });
-
-    checkButton.disabled = false;
-    feedback.textContent = "Choose an answer, then tap Check answer.";
-
-  } catch (error) {
-    prompt.textContent = "We couldn't generate a new question.";
-    feedback.style.color = "#ffb7bd";
-    feedback.textContent =
-      (error.message || "An unexpected error occurred.") +
-      " Tap Next question to try again.";
-
-  } finally {
-    nextButton.disabled = false;
+  async function beginExercises(){
+    stopSpeech();hide($("lesson"));show($("exercise"));$("questionHost").innerHTML="";
+    $("exerciseTitle").textContent=state.currentTopic+" — practice";
+    $("exerciseIntro").textContent="Question formats are selected according to the lesson. Answer, check the explanation, and then continue.";
+    $("questionHost").innerHTML='<div class="status">Preparing your first questions…</div>';
+    try{
+      if(!state.questions.length) await getBatch();
+      renderQuestion();
+      $("exercise").scrollIntoView({behavior:"smooth",block:"start"});
+    }catch(e){status("exerciseStatus",e.message,"error");$("questionHost").innerHTML="";}
   }
-}
-
-$("newExercise").addEventListener("click", () => {
-  renderExercise();
-});
-
-$("checkAnswer").addEventListener("click", () => {
-  const feedback = $("exerciseFeedback");
-
-  if (!currentExercise) {
-    feedback.textContent = "Please generate a question first.";
-    return;
+  function addTextInput(placeholder="Type your answer"){
+    const input=document.createElement("input");input.id="answerInput";input.placeholder=placeholder;input.autocomplete="off";
+    input.addEventListener("input",()=>{state.typed=input.value;});
+    $("questionHost").appendChild(input);
   }
-
-  if (chosenAnswer === null) {
-    feedback.textContent = "Please select an answer first.";
-    return;
+  function renderQuestion(){
+    if(state.qIndex>=state.count){finishExercise();return;}
+    if(state.qIndex>=state.questions.length){
+      $("questionHost").innerHTML='<div class="status">Preparing the next batch…</div>';
+      getBatch().then(renderQuestion).catch(e=>status("exerciseStatus",e.message,"error"));return;
+    }
+    state.selected=null;state.typed="";state.checked=false;
+    const q=state.questions[state.qIndex];
+    $("questionHost").innerHTML="";
+    $("exerciseCount").textContent=`${Math.min(state.questions.length,state.count)} / ${state.count} prepared`;
+    $("questionNo").textContent=`QUESTION ${state.qIndex+1} OF ${state.count}`;
+    $("exerciseProgress").style.width=(state.qIndex/state.count*100)+"%";
+    $("scoreText").textContent=`Score: ${state.score}`;
+    const card=document.createElement("div");card.className="question-card";
+    const type=document.createElement("span");type.className="pill";type.textContent=(q.type||"practice").replace(/_/g," ");
+    const skill=document.createElement("span");skill.className="pill";skill.textContent=q.skill||state.currentTopic;
+    card.append(type,skill);
+    const prompt=document.createElement("h3");prompt.textContent=q.prompt||q.question||"Answer the question.";card.appendChild(prompt);
+    if(q.sentence){const s=document.createElement("p");s.textContent=q.sentence;card.appendChild(s);}
+    if(q.passage){const p=document.createElement("p");p.style.whiteSpace="pre-wrap";p.textContent=q.passage;card.appendChild(p);}
+    if(q.table){
+      const box=document.createElement("div");box.className="table-scroll";const table=document.createElement("table");
+      q.table.forEach((row,i)=>{const tr=document.createElement("tr");row.forEach(cell=>{const td=document.createElement(i===0?"th":"td");td.textContent=cell;tr.appendChild(td);});table.appendChild(tr);});
+      box.appendChild(table);card.appendChild(box);
+    }
+    if(q.words){const words=document.createElement("p");words.className="status";words.textContent=q.words.join(" / ");card.appendChild(words);}
+    if(q.type==="mcq" || q.type==="punctuation_choice"){
+      const options=document.createElement("div");options.className="options";
+      (q.options||[]).forEach((o,i)=>{const b=document.createElement("button");b.className="option";b.textContent=String.fromCharCode(65+i)+". "+o;b.addEventListener("click",()=>{if(state.checked)return;state.selected=i;[...options.children].forEach(x=>x.classList.remove("chosen"));b.classList.add("chosen");});options.appendChild(b);});
+      card.appendChild(options);
+    } else if(q.type==="substitution_table"){
+      addTextInput("Write one correct sentence from the table");
+    } else if(q.type==="reorder"){
+      addTextInput("Write the words in the correct order");
+    } else if(q.type==="identify" || q.type==="classification"){
+      addTextInput("Type the word or its classification");
+    } else if(q.type==="question_tag"){
+      addTextInput("Write the correct question tag");
+    } else if(q.type==="word_formation"){
+      addTextInput("Write the correctly formed word");
+    } else if(q.type==="wh_question" || q.type==="transformation" || q.type==="narration" || q.type==="sentence_joining" || q.type==="tense_change" || q.type==="correction" || q.type==="short_text"){
+      addTextInput("Write your answer");
+    } else if(q.type==="verb_form" || q.type==="gap_fill" || q.type==="passage_gap"){
+      addTextInput("Write the missing word or verb form");
+    } else {addTextInput("Type your answer");}
+    $("questionHost").appendChild(card);
+    const fb=document.createElement("div");fb.id="answerFeedback";fb.className="feedback hidden";$("questionHost").appendChild(fb);
+    $("checkAnswer").disabled=false;$("nextQuestion").disabled=true;clearStatus("exerciseStatus");
   }
-
-  const correct =
-    chosenAnswer === currentExercise.correctIndex;
-
-  feedback.style.color = correct ? "#69e0bd" : "#ffb7bd";
-  feedback.textContent = correct
-    ? "Correct! " + currentExercise.explanation
-    : "Not quite. " + currentExercise.explanation;
-});
-
-
-
-
-
-
-
-
-$("startLesson").addEventListener("click",createLesson);
-$("readSection").addEventListener("click",teachSection);
-$("pauseSpeech").addEventListener("click",()=>{
-  stopSpeech();
-  $("speechStatus").textContent="Speech stopped. Tap Teach this section to hear it again.";
-});
-$("interrupt").addEventListener("click",()=>{
-  show("questionCard");
-  $("question").value="";
-  show("answerArea",false);
-  beginListening("question");
-  $("questionCard").scrollIntoView({behavior:"smooth",block:"start"});
-});
-$("listenQuestion").addEventListener("click",()=>beginListening("question"));
-$("speakTopic").addEventListener("click",()=>beginListening("topic"));
-$("askQuestion").addEventListener("click",answerQuestion);
-$("speakAnswer").addEventListener("click",()=>speak($("answerText").textContent));
-$("resumeLesson").addEventListener("click",()=>{
-  show("answerArea",false);
-  $("question").value="";
-  setMessage("Resuming at: "+(sections[currentSection]?.title || "your lesson"));
-  teachSection();
-});
-$("previousSection").addEventListener("click",goPrevious);
-$("nextSection").addEventListener("click",goNext);
-$("readSummary").addEventListener("click",()=>speak(
-  $("summaryText").textContent+". Homework: "+$("homeworkText").textContent
-));
-$("newLesson").addEventListener("click",()=>{
-  stopSpeech();
-  show("classroom",false);
-  show("questionCard",false);
-  show("practice",false);
-  show("finish",false);
-  show("setup");
-  $("topic").focus();
-  setMessage("Choose another topic to start a new lesson.");
-  window.scrollTo({top:0,behavior:"smooth"});
-});
-$("question").addEventListener("keydown",event=>{
-  if(event.key==="Enter" && (event.ctrlKey || event.metaKey)) answerQuestion();
-});
-$("topic").addEventListener("keydown",event=>{
-  if(event.key==="Enter") createLesson();
-});
+  function normAnswer(s){return String(s||"").toLowerCase().replace(/[’‘]/g,"'").replace(/[.!?,;:"'()]/g,"").replace(/\s+/g," ").trim();}
+  function isCorrect(q){
+    if(q.type==="mcq" || q.type==="punctuation_choice") return state.selected===q.correctIndex;
+    const given=normAnswer(state.typed);
+    const answers=[q.answer,...(q.acceptedAnswers||[])].filter(Boolean).map(normAnswer);
+    return answers.some(a=>given===a);
+  }
+  function checkAnswer(){
+    if(state.checked)return;
+    const q=state.questions[state.qIndex];
+    if((q.type==="mcq"||q.type==="punctuation_choice") && state.selected===null){status("exerciseStatus","Choose an option first.");return;}
+    if(!["mcq","punctuation_choice"].includes(q.type) && !state.typed.trim()){status("exerciseStatus","Enter your answer first.");return;}
+    state.checked=true;
+    const correct=isCorrect(q);if(correct)state.score++;
+    state.answers[state.qIndex]={correct,answer:state.typed,selected:state.selected,question:q};
+    const fb=$("answerFeedback");show(fb);
+    fb.innerHTML="";
+    const title=document.createElement("strong");title.textContent=correct?"Correct — well done.":"Let's learn from this.";
+    const p=document.createElement("p");p.textContent=q.explanation||"Review the rule and compare it with your answer.";
+    const ans=document.createElement("p");ans.textContent="Expected answer: "+(Array.isArray(q.acceptedAnswers)?[q.answer,...q.acceptedAnswers].filter(Boolean).join(" / "):(q.answer||q.options?.[q.correctIndex]||"See explanation"));
+    fb.append(title,p,ans);
+    const buttons=$("questionHost").querySelectorAll(".option");
+    buttons.forEach((b,i)=>{if(i===q.correctIndex)b.classList.add("correct");else if(i===state.selected&&!correct)b.classList.add("wrong");});
+    $("checkAnswer").disabled=true;$("nextQuestion").disabled=false;$("scoreText").textContent=`Score: ${state.score}`;
+    state.recent.push({prompt:q.prompt,answer:q.answer});if(state.recent.length>40)state.recent.shift();
+  }
+  async function nextQuestion(){
+    stopSpeech();
+    if(!state.checked){status("exerciseStatus","Check your answer before continuing.");return;}
+    state.qIndex++;
+    if(state.qIndex>=state.count){finishExercise();return;}
+    if(state.qIndex>=state.questions.length){
+      $("questionHost").innerHTML='<div class="status">Preparing more topic-specific questions…</div>';
+      try{await getBatch();renderQuestion();}catch(e){status("exerciseStatus",e.message,"error");}
+    }else renderQuestion();
+  }
+  function finishExercise(){
+    stopSpeech();hide($("exercise"));show($("summary"));
+    const answered=state.answers.filter(Boolean);const correct=answered.filter(a=>a.correct).length;
+    const percent=answered.length?Math.round(correct/answered.length*100):0;
+    $("summaryTitle").textContent=percent>=85?"Excellent progress":percent>=60?"Good progress — keep practising":"Let's strengthen the basics";
+    $("summaryBody").innerHTML="";
+    const p=document.createElement("p");p.textContent=`You answered ${answered.length} questions and got ${correct} correct (${percent}%).`;
+    const p2=document.createElement("p");p2.textContent=state.lesson.assessment||"Review the skills you found difficult.";
+    const heading=document.createElement("h3");heading.textContent="Skills to review";
+    const weak=[...new Set(answered.filter(a=>!a.correct).map(a=>a.question.skill||state.currentTopic))];
+    const list=document.createElement("ul");
+    (weak.length?weak:["Continue applying the topic in new contexts"]).forEach(s=>{const li=document.createElement("li");li.textContent=s;list.appendChild(li);});
+    const hw=document.createElement("p");hw.textContent="Suggested follow-up: "+(state.lesson.homework||"Write original examples using the topic.");
+    $("summaryBody").append(p,p2,heading,list,hw);
+    $("summary").scrollIntoView({behavior:"smooth",block:"start"});
+  }
+  $("startBtn").addEventListener("click",startLesson);
+  $("demoBtn").addEventListener("click",()=> $("topicTypes").classList.toggle("hidden"));
+  $("nextSection").addEventListener("click",nextSection);
+  $("prevSection").addEventListener("click",previousSection);
+  $("speakSection").addEventListener("click",()=>{const s=state.lesson?.sections[state.sectionIndex];if(s)say(s.title+". "+s.content+". Activity: "+s.activity,false);});
+  $("stopVoice").addEventListener("click",()=>{stopSpeech();$("readStatus").textContent="Voice stopped";});
+  $("checkAnswer").addEventListener("click",checkAnswer);
+  $("nextQuestion").addEventListener("click",nextQuestion);
+  $("finishExercise").addEventListener("click",finishExercise);
+  $("retryWeak").addEventListener("click",async()=>{state.questions=[];state.answers=[];state.qIndex=0;state.score=0;state.seen=new Set();state.recent=[];state.count=Number($("count").value);show($("exercise"));hide($("summary"));await beginExercises();});
+  $("newTopic").addEventListener("click",()=>{stopSpeech();hide($("summary"));hide($("lesson"));hide($("exercise"));show($("setup"));window.scrollTo({top:0,behavior:"smooth"});});
+})();
 </script>
 </body>
 </html>
